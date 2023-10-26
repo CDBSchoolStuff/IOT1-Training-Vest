@@ -25,7 +25,7 @@ def get_adafruit_gps():
         # hvis der er kommet end bruggbar værdi på alle der skal anvendes
         if gps.get_speed() != -999 and gps.get_latitude() != -999.0 and gps.get_longitude() != -999.0 and gps.get_validity() == "A":
             # gemmer returværdier fra metodekald i variabler
-            speed =str(gps.get_speed())
+            speed = str(gps.get_speed())
             lat = str(gps.get_latitude())
             lon = str(gps.get_longitude())
             # returnerer data med adafruit gps format

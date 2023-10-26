@@ -1,4 +1,4 @@
-#import sys
+import sys
 
-#sys.path.reverse()
+sys.path.reverse()
 print("\n\n\nESP32 starter op")
