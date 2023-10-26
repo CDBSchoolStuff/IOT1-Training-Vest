@@ -1,5 +1,4 @@
-import sys, uselect
-from machine import UART, Pin, ADC
+from machine import Pin, ADC
 from time import sleep, sleep_ms
 from neopixel import NeoPixel
 
@@ -91,7 +90,7 @@ def clear_led_ring():
 # PROGRAM
 
 
-def thread():
+def battery_status_thread():
     while True:
         bat_voltage = read_battery_voltage_avg64()
         bat_percentage = battery_percentage(bat_voltage)
@@ -114,22 +113,3 @@ def thread():
 
         # ---------------------------------    
         sleep(1)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#_thread.start_new_thread(status_thread, ())
-#_thread.start_new_thread(bat_status_thread, ())
