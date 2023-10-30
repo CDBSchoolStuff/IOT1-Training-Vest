@@ -1,8 +1,8 @@
-class Battery_Status:
-    from machine import Pin, ADC
-    from time import sleep, sleep_ms
-    from neopixel import NeoPixel
-    
+from machine import Pin, ADC
+from time import sleep, sleep_ms
+from neopixel import NeoPixel
+
+class Battery_Status:    
     #########################################################################
     # CONFIGURATION
 
@@ -11,8 +11,8 @@ class Battery_Status:
     min_bat_voltage = 3.0
 
     # Battery
-    pin_adc_bat = 25                       # The battery status input pin
-    max_adc_val = 3400                     # Målt Robust = 2700, Fumlebræt = 3400
+    # pin_adc_bat = 25                       # The battery status input pin
+    max_adc_val = 3350                     # Målt Robust = 2700, Fumlebræt 25 = 3400, fumlebræt 32 = 3350
     bat_scaling = max_bat_voltage / max_adc_val        # The battery voltage divider ratio, replace <adc_4v2> with ADC value when 4,2 V applied
 
     # Resistors
@@ -29,9 +29,10 @@ class Battery_Status:
     #########################################################################
     # OBJECTS
 
-    bat_adc = ADC(Pin(pin_adc_bat))        # The battery status ADC object
-    bat_adc.atten(ADC.ATTN_11DB)           # Full range: 3,3 V
-    bat_adc.width(ADC.WIDTH_12BIT)         # Bestemmer opløsningen i bits 12 (111111111111 = 4096)
+    # bat_adc = None
+    # bat_adc = ADC(Pin(pin_adc_bat))        # The battery status ADC object
+    # bat_adc.atten(ADC.ATTN_11DB)           # Full range: 3,3 V
+    # bat_adc.width(ADC.WIDTH_12BIT)         # Bestemmer opløsningen i bits 12 (111111111111 = 4096)
 
     # Instantierer neopixel som objekt
     neopixel = NeoPixel(Pin(PIXEL_PIN, Pin.OUT), PIXEL_NUMBER) # create NeoPixel instance
@@ -43,12 +44,8 @@ class Battery_Status:
     #########################################################################
     # INIT
     
-    # def __init__(self, bat_adc, pb):
-    #      self.bat_adc = bat_adc
-    #      self.pb = pb
-        
-        
-        
+    def __init__(self, bat_adc):
+         self.bat_adc = bat_adc        
 
 
     #########################################################################
@@ -70,7 +67,7 @@ class Battery_Status:
     def read_battery_voltage_avg64(self):      # Option: average over N times to remove fluctuations
         adc_val = 0
         for i in range(64):
-            adc_val += Battery_Status.bat_adc.read()      
+            adc_val += self.bat_adc.read()      
         voltage = Battery_Status.bat_scaling * (adc_val >> 6) # >> fast divide by 64
         return voltage
 
@@ -104,8 +101,8 @@ class Battery_Status:
     def battery_status(self):
         bat_voltage = self.read_battery_voltage_avg64()
         bat_percentage = self.battery_percentage(bat_voltage)
-        # print(bat_adc.read())
-        # print(bat_voltage)
+        print(self.bat_adc.read())
+        #print(bat_voltage)
         # print(button)
 
         print("Battery charge percentage:", bat_percentage, "%")
