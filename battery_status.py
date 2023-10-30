@@ -43,9 +43,9 @@ class Battery_Status:
     #########################################################################
     # INIT
     
-    def __init__(self, bat_adc, pb):
-         self.bat_adc = bat_adc
-         self.pb = pb
+    # def __init__(self, bat_adc, pb):
+    #      self.bat_adc = bat_adc
+    #      self.pb = pb
         
         
         
@@ -96,4 +96,24 @@ class Battery_Status:
         for number in range(Battery_Status.PIXEL_NUMBER): # Itererer mellem alle pixels.
             Battery_Status.neopixel[number] = (0, 0, 0) # Sætter den nuværende pixel i iterationen til at have farvekoden "0,0,0" (Dette slukker for dem).
             Battery_Status.neopixel.write()
-            
+        
+        
+    #########################################################################
+    # Program
+    
+    def battery_status(self):
+        bat_voltage = self.read_battery_voltage_avg64()
+        bat_percentage = self.battery_percentage(bat_voltage)
+        # print(bat_adc.read())
+        # print(bat_voltage)
+        # print(button)
+
+        print("Battery charge percentage:", bat_percentage, "%")
+
+        button = self.pb.value()
+
+        if button == 1:
+            self.update_led_ring(bat_percentage)
+            print("Updating LED ring")
+        else:
+            self.clear_led_ring()
