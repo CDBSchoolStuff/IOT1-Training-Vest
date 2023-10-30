@@ -2,6 +2,7 @@ from battery_status import Battery_Status
 from send_to_adafruit import Send_to_Adafruit
 from gps_stuff import GPS_Stuff
 from reg_tackling import Reg_Tackling
+from reg_inactivity import Reg_Inactivity
 
 import umqtt_robust2 as mqtt
 
@@ -25,6 +26,7 @@ bat_adc.atten(ADC.ATTN_11DB)           # Full range: 3,3 V
 Battery = Battery_Status(bat_adc)
 GPS = GPS_Stuff()
 Tackling = Reg_Tackling()
+Inactivity = Reg_Inactivity(GPS)
 
 Adafruit = Send_to_Adafruit(GPS, mqtt)
 
@@ -42,6 +44,9 @@ gps_stuff_period_ms = 1000
 
 tackling_reg_start = ticks_ms()
 tackling_reg_period_ms = 1000
+
+inactivity_reg_start = ticks_ms()
+inactivity_reg_period_ms = 1000
 
 
 while True:
@@ -63,10 +68,20 @@ while True:
         #     print(GPS.get_adafruit_gps())
         
         #------------------------------------------------------
-        # Registrering af Tackling
-        if ticks_ms() - tackling_reg_start > tackling_reg_period_ms:
-            tackling_reg_start = ticks_ms()
-            Tackling.reg_tackling()
+        # Register Tackling
+        
+        # if ticks_ms() - tackling_reg_start > tackling_reg_period_ms:
+        #     tackling_reg_start = ticks_ms()
+        #     Tackling.reg_tackling()
+        
+        #------------------------------------------------------
+        # Register Inactivity
+        
+        if ticks_ms() - inactivity_reg_start > inactivity_reg_period_ms:
+            inactivity_reg_start = ticks_ms()
+            Inactivity.reg_inactivity()
+            
+        
         #------------------------------------------------------
         # Send to Adafruit
         
@@ -74,6 +89,7 @@ while True:
         #     send_to_adafruit_start = ticks_ms()
             
         #     Adafruit.gps_to_adafruit()
+        
 
     except KeyboardInterrupt:
         print('Ctrl-C pressed...exiting')

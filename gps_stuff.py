@@ -34,8 +34,15 @@ class GPS_Stuff:
             return False
 
     def speed(self):
-        return self.gps.get_speed()
-
+        speed = None
+        if self.gps.receive_nmea_data():
+            if self.gps.get_speed() != -999:
+                speed = float(self.gps.get_speed())
+                return speed
+            else:
+                return False
+        else:
+            return False
 
     #########################################################################
     # PROGRAM

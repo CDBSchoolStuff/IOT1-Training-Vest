@@ -24,6 +24,7 @@ class Reg_Tackling:
     imu = MPU6050(i2c)
 
 
+
     #########################################################################
     # Functions
 
@@ -39,15 +40,16 @@ class Reg_Tackling:
 
                 if (imu_data.get("acceleration x") > self.standing_threshold or imu_data.get("acceleration x") < -self.standing_threshold) or (imu_data.get("acceleration y") > self.standing_threshold or imu_data.get("acceleration y") < -self.standing_threshold):
                     #print("Enheden står op!")
-                    prev_standing = True
+                    self.prev_standing = True
                 else:
                         print("Spilleren er blevet tacklet!")
                         
                         # --------- Del 3 ---------
-                        if prev_standing == True: # Sørger for at antallet af fald kun inkrementeres hvis der gåes fra stående til liggende tilstand.
+                        if self.prev_standing == True: # Sørger for at antallet af fald kun inkrementeres hvis der gåes fra stående til liggende tilstand.
                             self.number_of_falls = self.number_of_falls + 1
                             print("Antal fald:", self.number_of_falls)
+                            self.prev_standing = False
                             # --------- Del 6 ---------
-                            # mqtt.web_print(number_of_falls, 'chbo0003/feeds/ESP32feed')
+                            # mqtt.web_print(number_of_falls, 'chbo0003/feeds/tacklingfeed')
                             # -------------------------
                         # -------------------------
