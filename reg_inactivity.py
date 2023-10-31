@@ -1,5 +1,3 @@
-
-
 class Reg_Inactivity:
     #########################################################################
     # CONFIGURATION
@@ -46,6 +44,9 @@ class Reg_Inactivity:
                 self.trigger_val = 0
                 self.prev_inactive = False
             
-            return self.inactivity_amount
-        else:
-            print("Speed not valid. Current inactivity amount:", self.inactivity_amount)
+            #return self.inactivity_amount
+        # else:
+        #     print("Speed not valid. Current inactivity amount:", self.inactivity_amount)
+            
+    def get_inactivity_amount(self):
+        return self.inactivity_amount

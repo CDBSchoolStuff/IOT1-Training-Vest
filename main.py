@@ -5,6 +5,7 @@ from reg_tackling import Reg_Tackling
 from reg_inactivity import Reg_Inactivity
 
 import umqtt_robust2 as mqtt
+import _thread
 
 from machine import ADC, Pin
 from time import ticks_ms, sleep
@@ -28,7 +29,7 @@ GPS = GPS_Stuff()
 Tackling = Reg_Tackling()
 Inactivity = Reg_Inactivity(GPS)
 
-Adafruit = Send_to_Adafruit(GPS, mqtt)
+Adafruit = Send_to_Adafruit(GPS, mqtt, Tackling, Inactivity)
 
 #########################################################################
 # PROGRAM
@@ -37,7 +38,7 @@ battery_status_start = ticks_ms()
 battery_status_period_ms = 1000 # 1000ms = 1s
 
 send_to_adafruit_start = ticks_ms()
-send_to_adafruit_period_ms = 10000 # 10000ms = 10s
+send_to_adafruit_period_ms = 5000 # 10000ms = 10s
 
 gps_stuff_start = ticks_ms()
 gps_stuff_period_ms = 1000
@@ -54,10 +55,10 @@ while True:
         #------------------------------------------------------
         # Battery Status
         
-        # if ticks_ms() - battery_status_start > battery_status_period_ms:
-        #     battery_status_start = ticks_ms()
+        if ticks_ms() - battery_status_start > battery_status_period_ms:
+            battery_status_start = ticks_ms()
             
-        #     Battery.battery_status()
+            Battery.battery_status()
         
         #------------------------------------------------------
         # GPS Stuff
@@ -70,9 +71,9 @@ while True:
         #------------------------------------------------------
         # Register Tackling
         
-        # if ticks_ms() - tackling_reg_start > tackling_reg_period_ms:
-        #     tackling_reg_start = ticks_ms()
-        #     Tackling.reg_tackling()
+        if ticks_ms() - tackling_reg_start > tackling_reg_period_ms:
+            tackling_reg_start = ticks_ms()
+            Tackling.reg_tackling()
         
         #------------------------------------------------------
         # Register Inactivity
@@ -85,13 +86,19 @@ while True:
         #------------------------------------------------------
         # Send to Adafruit
         
-        # if ticks_ms() - send_to_adafruit_start > send_to_adafruit_period_ms:
-        #     send_to_adafruit_start = ticks_ms()
+        if ticks_ms() - send_to_adafruit_start > send_to_adafruit_period_ms:
+            send_to_adafruit_start = ticks_ms()
             
-        #     Adafruit.gps_to_adafruit()
-        
+            #Adafruit.gps_to_adafruit()
+            #Adafruit.tackling_to_adafruit()
+            #Adafruit.inactivity_to_adafruit()
+            
+            Adafruit.send_to_adafruit()
+    
+
 
     except KeyboardInterrupt:
         print('Ctrl-C pressed...exiting')
         mqtt.c.disconnect()
         sys.exit()
+        

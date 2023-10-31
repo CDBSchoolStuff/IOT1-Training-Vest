@@ -42,7 +42,7 @@ class Reg_Tackling:
                     #print("Enheden står op!")
                     self.prev_standing = True
                 else:
-                        print("Spilleren er blevet tacklet!")
+                        # print("Spilleren er blevet tacklet!")
                         
                         # --------- Del 3 ---------
                         if self.prev_standing == True: # Sørger for at antallet af fald kun inkrementeres hvis der gåes fra stående til liggende tilstand.
@@ -53,3 +53,6 @@ class Reg_Tackling:
                             # mqtt.web_print(number_of_falls, 'chbo0003/feeds/tacklingfeed')
                             # -------------------------
                         # -------------------------
+    
+    def get_tackling_amount(self):
+        return self.number_of_falls

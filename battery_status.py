@@ -98,7 +98,9 @@ class Battery_Status:
     #########################################################################
     # Program
     
-    def battery_status(self):
+    
+
+    def neopixel_battery_status(self):
         bat_voltage = self.read_battery_voltage_avg64()
         bat_percentage = self.battery_percentage(bat_voltage)
         print(self.bat_adc.read())
