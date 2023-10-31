@@ -39,7 +39,16 @@ class Battery_Status:
 
     # Instantierer knap som objekt
     pb = Pin(pin_adc_button, Pin.IN)
-
+    
+    #########################################################################
+    # Class variables
+    
+    bat_percentage = 0
+    avg_bat_percentage = 0
+    
+    # Opret en tom buffer
+    buffer = []
+    
 
     #########################################################################
     # INIT
@@ -93,25 +102,38 @@ class Battery_Status:
         for number in range(Battery_Status.PIXEL_NUMBER): # Itererer mellem alle pixels.
             Battery_Status.neopixel[number] = (0, 0, 0) # Sætter den nuværende pixel i iterationen til at have farvekoden "0,0,0" (Dette slukker for dem).
             Battery_Status.neopixel.write()
-        
+    
+    def calculate_average_battery(self, window_size):
+        buffer = self.buffer
+        buffer.append(self.bat_percentage)
+        if len(buffer) > window_size:
+            buffer.pop(0)  # Fjern ældste værdi, hvis bufferen er fyldt
+
+        if not buffer:
+            return 0  # Returner 0, hvis bufferen er tom
+        return sum(buffer) / len(buffer)
         
     #########################################################################
     # Program
     
     
-    bat_percentage = 0
-    
     # Denne funktion har til ansvar at opdatere batteri-procent variablen.
     def reg_battery_status(self):
+        # Specificer vinduestørrelse (f.eks. 10 eksekveringer)
+        window_size = 20
+        
         bat_voltage = self.read_battery_voltage_avg64()
         self.bat_percentage = self.battery_percentage(bat_voltage)
+        self.avg_bat_percentage = self.calculate_average_battery(window_size)
     
     # Denne funktion har til ansvar at opdatere Neopixel ringen med den nuværende batteri procent.
     def neopixel_battery_status(self):
-        percentage = self.bat_percentage
+        #percentage = self.bat_percentage
+        percentage = self.avg_bat_percentage
         button = self.pb.value()
         
-        print("Battery charge percentage:", percentage, "%")
+        print("Battery charge percentage:", self.bat_percentage, "%")
+        print("Avg battery charge percentage:", self.avg_bat_percentage, "%")
 
         if button == 1:
             self.update_led_ring(percentage)
@@ -121,4 +143,4 @@ class Battery_Status:
     
     # Funktion som returnerer batteri procenten
     def get_bat_percentage(self):
-        return self.bat_percentage
+        return self.avg_bat_percentage

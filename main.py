@@ -92,7 +92,7 @@ while True:
         if ticks_ms() - send_to_adafruit_start > send_to_adafruit_period_ms:
             send_to_adafruit_start = ticks_ms()
                         
-            #Adafruit.send_to_adafruit()
+            Adafruit.send_to_adafruit()
     
 
 
