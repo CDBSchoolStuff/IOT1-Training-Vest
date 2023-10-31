@@ -9,11 +9,12 @@ class Send_to_Adafruit:
     #########################################################################
     # INIT
     
-    def __init__(self, GPS, mqtt, Tackling, Inactivity):
+    def __init__(self, GPS, mqtt, Tackling, Inactivity, Battery):
         self.GPS = GPS
         self.mqtt = mqtt
         self.Tackling = Tackling
         self.Inactivity = Inactivity
+        self.Battery = Battery
         
     
     
@@ -39,7 +40,11 @@ class Send_to_Adafruit:
         print("Inactivity Amount: ", inactivity_amount)
         self.mqtt.web_print(inactivity_amount, 'chbo0003/feeds/inactivityfeed')
         
-        
+    
+    def battery_to_adafruit(self):
+        battery_percentage = self.Battery.get_bat_percentage()
+        print("Battery Percentage: ", battery_percentage, "%")
+        self.mqtt.web_print(battery_percentage, 'chbo0003/feeds/batteryfeed')
         
     current_function_index = 0 # Variable to keeps track of the index of the next function to execute
     
@@ -52,7 +57,8 @@ class Send_to_Adafruit:
         functions_to_execute = [
             self.gps_to_adafruit, 
             self.tackling_to_adafruit, 
-            self.inactivity_to_adafruit
+            self.inactivity_to_adafruit,
+            self.battery_to_adafruit
         ]
         
         if self.current_function_index < len(functions_to_execute):

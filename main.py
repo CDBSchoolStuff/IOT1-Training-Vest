@@ -29,7 +29,7 @@ GPS = GPS_Stuff()
 Tackling = Reg_Tackling()
 Inactivity = Reg_Inactivity(GPS)
 
-Adafruit = Send_to_Adafruit(GPS, mqtt, Tackling, Inactivity)
+Adafruit = Send_to_Adafruit(GPS, mqtt, Tackling, Inactivity, Battery)
 
 #########################################################################
 # PROGRAM
@@ -58,7 +58,8 @@ while True:
         if ticks_ms() - battery_status_start > battery_status_period_ms:
             battery_status_start = ticks_ms()
             
-            Battery.battery_status()
+            Battery.reg_battery_status()
+            Battery.neopixel_battery_status()
         
         #------------------------------------------------------
         # GPS Stuff
@@ -73,6 +74,7 @@ while True:
         
         if ticks_ms() - tackling_reg_start > tackling_reg_period_ms:
             tackling_reg_start = ticks_ms()
+            
             Tackling.reg_tackling()
         
         #------------------------------------------------------
@@ -80,6 +82,7 @@ while True:
         
         if ticks_ms() - inactivity_reg_start > inactivity_reg_period_ms:
             inactivity_reg_start = ticks_ms()
+            
             Inactivity.reg_inactivity()
             
         
@@ -88,12 +91,8 @@ while True:
         
         if ticks_ms() - send_to_adafruit_start > send_to_adafruit_period_ms:
             send_to_adafruit_start = ticks_ms()
-            
-            #Adafruit.gps_to_adafruit()
-            #Adafruit.tackling_to_adafruit()
-            #Adafruit.inactivity_to_adafruit()
-            
-            Adafruit.send_to_adafruit()
+                        
+            #Adafruit.send_to_adafruit()
     
 
 

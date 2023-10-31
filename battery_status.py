@@ -99,20 +99,26 @@ class Battery_Status:
     # Program
     
     
-
-    def neopixel_battery_status(self):
+    bat_percentage = 0
+    
+    # Denne funktion har til ansvar at opdatere batteri-procent variablen.
+    def reg_battery_status(self):
         bat_voltage = self.read_battery_voltage_avg64()
-        bat_percentage = self.battery_percentage(bat_voltage)
-        print(self.bat_adc.read())
-        #print(bat_voltage)
-        # print(button)
-
-        print("Battery charge percentage:", bat_percentage, "%")
-
+        self.bat_percentage = self.battery_percentage(bat_voltage)
+    
+    # Denne funktion har til ansvar at opdatere Neopixel ringen med den nuværende batteri procent.
+    def neopixel_battery_status(self):
+        percentage = self.bat_percentage
         button = self.pb.value()
+        
+        print("Battery charge percentage:", percentage, "%")
 
         if button == 1:
-            self.update_led_ring(bat_percentage)
+            self.update_led_ring(percentage)
             print("Updating LED ring")
         else:
             self.clear_led_ring()
+    
+    # Funktion som returnerer batteri procenten
+    def get_bat_percentage(self):
+        return self.bat_percentage
