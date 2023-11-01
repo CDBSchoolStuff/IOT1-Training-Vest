@@ -3,6 +3,7 @@ from send_to_adafruit import Send_to_Adafruit
 from gps_stuff import GPS_Stuff
 from reg_tackling import Reg_Tackling
 from reg_inactivity import Reg_Inactivity
+from neopixel_stuff import NeoPixel_Stuff
 
 import umqtt_robust2 as mqtt
 import _thread
@@ -23,11 +24,11 @@ bat_adc = ADC(Pin(pin_adc_bat, Pin.IN))        # The battery status ADC object
 bat_adc.atten(ADC.ATTN_11DB)           # Full range: 3,3 V
 #bat_adc.width(ADC.WIDTH_12BIT)         # Bestemmer opløsningen i bits 12 (111111111111 = 4096)
 
-
 Battery = Battery_Status(bat_adc)
 GPS = GPS_Stuff()
 Tackling = Reg_Tackling()
-Inactivity = Reg_Inactivity(GPS)
+LED_Ring = NeoPixel_Stuff(Battery, Tackling)
+Inactivity = Reg_Inactivity(GPS, LED_Ring)
 
 Adafruit = Send_to_Adafruit(GPS, mqtt, Tackling, Inactivity, Battery)
 
@@ -59,7 +60,7 @@ while True:
             battery_status_start = ticks_ms()
             
             Battery.reg_battery_status()
-            Battery.neopixel_battery_status()
+            LED_Ring.neopixel_battery_status()
         
         #------------------------------------------------------
         # GPS Stuff
@@ -76,6 +77,7 @@ while True:
             tackling_reg_start = ticks_ms()
             
             Tackling.reg_tackling()
+            LED_Ring.neopixel_tackling()
         
         #------------------------------------------------------
         # Register Inactivity

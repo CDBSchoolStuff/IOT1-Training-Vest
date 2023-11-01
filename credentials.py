@@ -7,18 +7,23 @@
 # men der skal oprettes en feed med samme navn på adafruit.io
 
 from machine import I2C
-from eeprom_24xx64 import EEPROM_24xx64
+# from eeprom_24xx64 import EEPROM_24xx64
 
 i2c = I2C(0, freq = 400000)
 
-eeprom = EEPROM_24xx64(i2c, 0x50)
+# eeprom = EEPROM_24xx64(i2c, 0x50)
 
 
 # Læser strenge fra EEPROM
-ssid = eeprom.read_string(1)
-password = eeprom.read_string(20)
-username = eeprom.read_string(40)
-key = eeprom.read_string(50)
+# ssid = eeprom.read_string(1)
+# password = eeprom.read_string(20)
+# username = eeprom.read_string(40)
+# key = eeprom.read_string(50)
+
+ssid = "LTE-1857"
+password = "12345678"
+username = "chbo0003"
+key = "aio_dfuA63jB8w3tr5Q8lvtRts5LYOsa"
 
 
 # Printer læste strenge.

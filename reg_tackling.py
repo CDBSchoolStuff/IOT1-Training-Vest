@@ -34,25 +34,29 @@ class Reg_Tackling:
     # PROGRAM
 
     def reg_tackling(self):
-                # printer hele dictionary som returneres fra get_values metoden
-                imu_data = self.imu.get_values()
-                #print(imu_data)
+                try:
+                    # printer hele dictionary som returneres fra get_values metoden
+                    imu_data = self.imu.get_values()
+                    #print(imu_data)
 
-                if (imu_data.get("acceleration x") > self.standing_threshold or imu_data.get("acceleration x") < -self.standing_threshold) or (imu_data.get("acceleration y") > self.standing_threshold or imu_data.get("acceleration y") < -self.standing_threshold):
-                    #print("Enheden står op!")
-                    self.prev_standing = True
-                else:
-                        # print("Spilleren er blevet tacklet!")
-                        
-                        # --------- Del 3 ---------
-                        if self.prev_standing == True: # Sørger for at antallet af fald kun inkrementeres hvis der gåes fra stående til liggende tilstand.
-                            self.number_of_falls = self.number_of_falls + 1
-                            print("Antal fald:", self.number_of_falls)
-                            self.prev_standing = False
-                            # --------- Del 6 ---------
-                            # mqtt.web_print(number_of_falls, 'chbo0003/feeds/tacklingfeed')
+                    if (imu_data.get("acceleration x") > self.standing_threshold or imu_data.get("acceleration x") < -self.standing_threshold) or (imu_data.get("acceleration y") > self.standing_threshold or imu_data.get("acceleration y") < -self.standing_threshold):
+                        #print("Enheden står op!")
+                        self.prev_standing = True
+                    else:
+                            # print("Spilleren er blevet tacklet!")
+                            
+                            # --------- Del 3 ---------
+                            if self.prev_standing == True: # Sørger for at antallet af fald kun inkrementeres hvis der gåes fra stående til liggende tilstand.
+                                self.number_of_falls = self.number_of_falls + 1
+                                print("Antal fald:", self.number_of_falls)
+                                self.prev_standing = False
+                                # --------- Del 6 ---------
+                                # mqtt.web_print(number_of_falls, 'chbo0003/feeds/tacklingfeed')
+                                # -------------------------
                             # -------------------------
-                        # -------------------------
+                except:
+                    print("reg_tackling error, exception caught!")
+                  
     
     def get_tackling_amount(self):
         return self.number_of_falls
