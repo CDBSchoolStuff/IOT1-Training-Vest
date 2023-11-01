@@ -87,15 +87,17 @@ class NeoPixel_Stuff:
     def neopixel_tackling(self):
         tackling_amount = self.Tackling.get_tackling_amount()
         
-        interval = [10, 20, 30, 40, 50]        
+        interval = [10, 20, 30, 40, 50]                    
         
         if tackling_amount in interval and self.val < 4:
-            if self.prev_on == False:
+            if self.prev_on == True:
+                self.clear_led_ring()
+                self.prev_on = False
+            else:
                 self.set_color_all(30,0,0)
                 self.prev_on = True
                 self.val = self.val + 1
-            else:
-                self.clear_led_ring()
-                self.prev_on = False
+            
         if tackling_amount not in interval:
             self.val = 0
+            
