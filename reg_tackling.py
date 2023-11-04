@@ -7,12 +7,15 @@ class Reg_Tackling:
     #########################################################################
     # CONFIGURATION
 
+    standing_threshold = 10000
 
 
-    # Diverse variabler:
-    standing_threshold = 10000 # Ansvarlig for stejlheden af hvornår enheden betegnes som værende stående eller liggende.
+    #########################################################################
+    # CLASS VARIABLES
+
     number_of_falls = 0
     prev_standing = False
+
 
     #########################################################################
     # OBJECTS
@@ -24,38 +27,22 @@ class Reg_Tackling:
     imu = MPU6050(i2c)
 
 
-
     #########################################################################
     # Functions
 
-
-
-    #########################################################################
-    # PROGRAM
-
     def reg_tackling(self):
-                try:
-                    # printer hele dictionary som returneres fra get_values metoden
-                    imu_data = self.imu.get_values()
-                    #print(imu_data)
+        try:
+            imu_data = self.imu.get_values()
 
-                    if (imu_data.get("acceleration x") > self.standing_threshold or imu_data.get("acceleration x") < -self.standing_threshold) or (imu_data.get("acceleration y") > self.standing_threshold or imu_data.get("acceleration y") < -self.standing_threshold):
-                        #print("Enheden står op!")
-                        self.prev_standing = True
-                    else:
-                            # print("Spilleren er blevet tacklet!")
-                            
-                            # --------- Del 3 ---------
-                            if self.prev_standing == True: # Sørger for at antallet af fald kun inkrementeres hvis der gåes fra stående til liggende tilstand.
-                                self.number_of_falls = self.number_of_falls + 1
-                                print("Antal fald:", self.number_of_falls)
-                                self.prev_standing = False
-                                # --------- Del 6 ---------
-                                # mqtt.web_print(number_of_falls, 'chbo0003/feeds/tacklingfeed')
-                                # -------------------------
-                            # -------------------------
-                except:
-                    print("reg_tackling error, exception caught!")
+            if (imu_data.get("acceleration x") > self.standing_threshold or imu_data.get("acceleration x") < -self.standing_threshold) or (imu_data.get("acceleration y") > self.standing_threshold or imu_data.get("acceleration y") < -self.standing_threshold):
+                self.prev_standing = True
+            else:
+                    if self.prev_standing == True:
+                        self.number_of_falls = self.number_of_falls + 1
+                        print("Antal fald:", self.number_of_falls)
+                        self.prev_standing = False
+        except:
+            print("reg_tackling error, exception caught!")
                   
     
     def get_tackling_amount(self):

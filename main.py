@@ -17,12 +17,12 @@ import sys
 
 pin_adc_bat = 32
 
-gps_test_data = 0.346324,55.69168,12.55455,0.0
+
 #########################################################################
 # OBJECTS
+
 bat_adc = ADC(Pin(pin_adc_bat, Pin.IN))        # The battery status ADC object
 bat_adc.atten(ADC.ATTN_11DB)           # Full range: 3,3 V
-#bat_adc.width(ADC.WIDTH_12BIT)         # Bestemmer opløsningen i bits 12 (111111111111 = 4096)
 
 Battery = Battery_Status(bat_adc)
 GPS = GPS_Stuff()
@@ -31,6 +31,7 @@ LED_Ring = NeoPixel_Stuff(Battery, Tackling)
 Inactivity = Reg_Inactivity(GPS, LED_Ring)
 
 Adafruit = Send_to_Adafruit(GPS, mqtt, Tackling, Inactivity, Battery)
+
 
 #########################################################################
 # PROGRAM
